@@ -1,0 +1,36 @@
+# Compiled Python files
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+env/
+
+# IDE-specific files and directories
+.idea/
+.vscode/
+
+# Editor backup files
+*~
+
+# Log files
+*.log
+
+# Compiled binary files
+*.bin
+
+# Data and output files
+*.csv
+*.xlsx
+*.json
+
+# Parquet files
+# *.parquet
+
+# Cached files or directories
+.cache/
+.pycache/
+
+# OS-specific files
+.DS_Store
+Thumbs.db

@@ -16,8 +16,8 @@ semantic_text_search
 * /health is implemented with DB connection health and CPU/resources utilization (can scale to include upstream and downstream services) 
 
 #Screenshots
-![Search_API](/assets/Search_API.png)
-![Search_box](/assets/Search_box.png)
+![Search_API](/res/assets/Search_API.png)
+![Search_box](/res/assets/Search_box.png)
 
 # ToDo: architecture that considers scaling of search application:
 * Write an ADR, 
