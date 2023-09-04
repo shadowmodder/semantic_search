@@ -1,8 +1,19 @@
 # semantic_search
 semantic_text_search
 
-#Features impletmented:
+# Prerequisites
+   * Python > 3.9
+   * Virtual environment (optional)
+   * Package manager (pip3)
 
+# Installation
+   * git clone https://github.com/shadowmodder/semantic_search
+   * cd semantic_search
+   * pip install -r requirements.txt
+   * python search_app.py
+
+
+# Features impletmented:
 * [/search] /search/<your_search_query> e.g. for keyword "legal": http://localhost:8080/search/legal  (This loads fast)
 * [/health] /health e.g.: http://localhost:8080/health 
 * [/search] another endpoint with query params: http://localhost:8080/search?q=legal (Slow loading at this time)
