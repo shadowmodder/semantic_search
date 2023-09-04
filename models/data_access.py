@@ -1,12 +1,9 @@
-# models/data_access.py
-
 import os
 import spacy
 import pandas as pd
 from docx import Document
 from PyPDF2 import PdfReader
 from sentence_transformers import SentenceTransformer
-import numpy as np
 
 class DataAccess:
     def __init__(self, data_directory="Sample_Docs"):
@@ -16,13 +13,13 @@ class DataAccess:
         self.df = self.load_data()
         self.parquet_filename = "res/data/data_chunks.parquet"
         if not os.path.exists(self.parquet_filename):
-            self.parquet = self.save_parquet(self.df)
-
+            self.save_parquet(self.df)
 
     def load_data(self):
         chunks = []
         filenames = []
         embeddings = []
+        context = []  # list to store additional context
 
         for subfolder in ["pdf", "txt", "word"]:
             subfolder_path = os.path.join(self.data_directory, subfolder)
@@ -40,20 +37,28 @@ class DataAccess:
                 elif filepath.endswith(".docx"):
                     doc = Document(filepath)
                     doc_text = " ".join(para.text for para in doc.paragraphs)
-                    document_chunks = self.nlp(doc_text)
+                    document_chunks = list(self.nlp(doc_text).sents)  # Convert to a list
+
+                    for chunk in document_chunks:
+                        chunk_index = document_chunks.index(chunk)
+                        start_index = max(0, chunk_index - 1)
+                        end_index = min(len(document_chunks), chunk_index + 2)
+                        context_chunk = document_chunks[start_index:end_index]
+                        context_text = " ".join([str(sent) for sent in context_chunk])
+
+                        chunks.append(chunk.text)
+                        context.append(context_text)  # Store additional context
+                        filenames.append(filename)
+                        embeddings.append(self.model.encode([chunk.text])[0])
+
                 else:
                     continue
 
-                for chunk in document_chunks.sents:
-                    chunks.append(chunk.text)
-                    filenames.append(filename)
-                    embeddings.append(self.model.encode([chunk.text])[0])
-
-        data = {"Chunk": chunks, "Filename": filenames, "Embedding": embeddings}
+        data = {"Chunk": chunks, "Context": context, "Filename": filenames, "Embedding": embeddings}
         df = pd.DataFrame(data)
 
         return df
-    
+
     def save_parquet(self, dframe):
         # Save DataFrame as Parquet file
         dframe.to_parquet(self.parquet_filename, index=False)
@@ -63,7 +68,7 @@ class DataAccess:
         try:
             # Load the Parquet file into a DataFrame
             df = pd.read_parquet(self.parquet_filename)
-            
+
             # Assuming the DataFrame has an "Embedding" column
             if "Embedding" in df.columns:
                 return df["Embedding"].tolist()
@@ -77,7 +82,7 @@ class DataAccess:
         try:
             # Load the Parquet file into a DataFrame
             df = pd.read_parquet(self.parquet_filename)
-            
+
             # Assuming the DataFrame has a "Filename" column
             if "Filename" in df.columns:
                 return df["Filename"].tolist()
@@ -86,21 +91,17 @@ class DataAccess:
         except Exception as e:
             print(f"Error loading filenames: {str(e)}")
             return []
-
-
-    #retrieve directly from df:
-    # def get_all_embeddings(self):
-    #     return self.df["Embedding"].tolist()
-
-    # def get_all_filenames(self):
-    #     return self.df["Filename"].tolist()
-    
-    def check_database_health():
-        # ToDo Add logic to check the database connectivity
-        # Return True if the connection is successful, else return False
+        
+    def get_all_contexts(self):
         try:
-            # Check the database connection here
-            return True
-        except Exception as e:
-            return False
+            # Load the Parquet file into a DataFrame
+            df = pd.read_parquet(self.parquet_filename)
 
+            # Assuming the DataFrame has an "Contexts" column
+            if "Context" in df.columns:
+                return df["Context"].tolist()
+            else:
+                return []
+        except Exception as e:
+            print(f"Error loading contexts: {str(e)}")
+            return []
