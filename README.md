@@ -26,6 +26,16 @@ semantic_text_search
 * Data access is already abstracted - so we can switch between Vector Databases or use multiple,
 * /health is implemented with DB connection health and CPU/resources utilization (can scale to include upstream and downstream services) 
 
+# Extending the system to encompass other document-level metadata in addition to the filename
+* Update dao layer say in models/data_access.py with additional document-level metadata 
+* Update controller layer in controllers/search_controller.py 
+* Update ciews with results in services/search_service.py or use the views/templates/seach.html
+
+# scaling up
+* Dockerfile in place works this will containerize for scaling but we need an API gateway, load balancer and Auth in place to scale this up proportaional to usage.
+* Query logging/caching can help with this as well.
+
+
 #Screenshots
 ![Search_API](/res/assets/Search_API.png)
 ![Search_box](/res/assets/Search_box.png)
