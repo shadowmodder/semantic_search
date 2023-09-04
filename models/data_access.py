@@ -14,6 +14,10 @@ class DataAccess:
         self.model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
         self.nlp = spacy.load("en_core_web_sm")
         self.df = self.load_data()
+        self.parquet_filename = "res/data/data_chunks.parquet"
+        if not os.path.exists(self.parquet_filename):
+            self.parquet = self.save_parquet(self.df)
+
 
     def load_data(self):
         chunks = []
@@ -49,12 +53,47 @@ class DataAccess:
         df = pd.DataFrame(data)
 
         return df
+    
+    def save_parquet(self, dframe):
+        # Save DataFrame as Parquet file
+        dframe.to_parquet(self.parquet_filename, index=False)
+        print(f"Data saved as {self.parquet_filename}")
 
     def get_all_embeddings(self):
-        return self.df["Embedding"].tolist()
+        try:
+            # Load the Parquet file into a DataFrame
+            df = pd.read_parquet(self.parquet_filename)
+            
+            # Assuming the DataFrame has an "Embedding" column
+            if "Embedding" in df.columns:
+                return df["Embedding"].tolist()
+            else:
+                return []
+        except Exception as e:
+            print(f"Error loading embeddings: {str(e)}")
+            return []
 
     def get_all_filenames(self):
-        return self.df["Filename"].tolist()
+        try:
+            # Load the Parquet file into a DataFrame
+            df = pd.read_parquet(self.parquet_filename)
+            
+            # Assuming the DataFrame has a "Filename" column
+            if "Filename" in df.columns:
+                return df["Filename"].tolist()
+            else:
+                return []
+        except Exception as e:
+            print(f"Error loading filenames: {str(e)}")
+            return []
+
+
+    #retrieve directly from df:
+    # def get_all_embeddings(self):
+    #     return self.df["Embedding"].tolist()
+
+    # def get_all_filenames(self):
+    #     return self.df["Filename"].tolist()
     
     def check_database_health():
         # ToDo Add logic to check the database connectivity
