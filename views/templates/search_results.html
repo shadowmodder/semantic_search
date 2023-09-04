@@ -1,0 +1,17 @@
+<!-- views/templates/search_results.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <h1>Search Results</h1>
+    <ul>
+        {% for result in search_results %}
+            <li>{{ result.text }} - {{ result.filename }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
