@@ -9,10 +9,12 @@ search_bp = Blueprint('search', __name__)
 # Define URL routes
 search_bp.add_url_rule('/search/<query>', 'search', search_endpoint)
 
+
 # @search_bp.route('/search', methods=['GET'])
 # def search_page():
 #     return render_template('search.html')
 @search_bp.route('/search', methods=['GET'])
+@search_bp.route('/search/', methods=['GET'])
 def search_page():
     query = request.args.get('q', '')
     if(query):

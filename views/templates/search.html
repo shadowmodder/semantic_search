@@ -1,28 +1,32 @@
-<!-- views/search.html -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Search</title>
+    <title>Search Page</title>
 </head>
 <body>
-    <h1>Search</h1>
-    <form action="/search" method="GET">
-        <label for="query">Enter your search query:</label>
-        <input type="text" id="query" name="q">
+    <h1>Search Page</h1>
+
+    <!-- Search form -->
+    <form id="searchForm" action="/search" method="GET" target="_blank">
+        <input type="text" name="query" placeholder="Search Here...">
         <button type="submit">Search</button>
     </form>
 
-    <!-- Display search results here -->
-    <div id="search-results">
-        <h2>Search Results</h2>
-        <ul>
-            {% for result in search_results %}
-                <li>{{ result.text }} (from {{ result.filename }})</li>
-            {% endfor %}
-        </ul>
-    </div>
+    <!-- JavaScript to redirect on button click -->
+    <script>
+        // Get the search form element
+        var searchForm = document.getElementById('searchForm');
 
+        // Add a click event listener to the submit button
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var query = document.querySelector('input[name="query"]').value; // Get the search query
+            // Define the URL you want to redirect to
+            var redirectUrl = 'http://localhost:8080/search/' + encodeURIComponent(query);
+            window.location.href = redirectUrl; // Redirect to the specified URL
+        });
+    </script>
 </body>
 </html>
+
+
