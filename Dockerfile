@@ -1,23 +1,10 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim-buster
-
-# Set the working directory in the container
+# Use an official Ubuntu base image
+FROM ubuntu:20.04
+RUN apt-get update && apt-get install -y python3 python3-pip
 WORKDIR /app
-
-# Copy the current directory contents into the container at /app
-COPY . /app
-
-# Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
-
-# Make port 80 available to the world outside this container
-EXPOSE 80
-
-# Define environment variable
-ENV NAME World
-
-# Run app.py when the container launches
-# ENTRYPOINT ["aptly"]
-# ENTRYPOINT ["sh", "-c", "pip install -r requirements.txt"]
-CMD ["python", "src/Serving/SearchEndpoint.py"]
- 
+COPY . .
+EXPOSE 8080
+# Make the run script executable
+RUN chmod +x install.sh
+# Specify the Bash script as the entry point
+ENTRYPOINT ["install.sh"]
