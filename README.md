@@ -25,6 +25,8 @@ semantic_text_search
 * Instead of vector DB we are using Parquet files (this can be a future improvement that boosts the results)
 * Data access is already abstracted - so we can switch between Vector Databases or use multiple,
 * /health is implemented with DB connection health and CPU/resources utilization (can scale to include upstream and downstream services) 
+* Included additional context with search results.
+* Tried to implement Milvus Vector DB - models/milvus.py 
 
 # Extending the system to encompass other document-level metadata in addition to the filename
 * Update dao layer say in models/data_access.py with additional document-level metadata 
