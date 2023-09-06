@@ -5,6 +5,7 @@ semantic_text_search
    * Python > 3.9
    * Virtual environment (optional)
    * Package manager (pip3)
+   * brew install rust
 
 # Installation
    * git clone https://github.com/shadowmodder/semantic_search
